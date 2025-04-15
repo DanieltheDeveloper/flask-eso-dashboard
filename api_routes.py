@@ -1,10 +1,9 @@
 from flask import Blueprint, jsonify
 import requests
 from bs4 import BeautifulSoup
-from flask_caching import Cache
+from extensions import cache
 
 api_v1_blueprint = Blueprint("api_v1", __name__)
-cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
 
 ESO_SERVER_REGIONS = ["PC-EU", "PC-NA", "PC-PTS", "XBOX-EU", "XBOX-NA", "PS4-NA", "PS4-EU"]
 STEAM_CHART_COUNTS = ["current", "24-peak", "all-time-peak"]
