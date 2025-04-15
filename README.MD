@@ -1,6 +1,6 @@
 # Flask ESO Dashboard
 
-Simple Flask ESO Dashboard for local deployment
+Simple Flask ESO Dashboard with caching support for local deployment
 
 ![Project Overview](readme.png)
 
@@ -51,6 +51,7 @@ Here is an overview of the project structure:
 flask-eso-dashboard/
 ├── app.py                 # Main Flask application
 ├── api_routes.py          # API v1 routes
+├── extensions.py          # Add extensions like cache to app
 ├── templates/             # HTML templates for the app
 │   └── dashboard.html     # Main dashboard page
 ├── static/                # Static assets (CSS, JS, images, videos)
