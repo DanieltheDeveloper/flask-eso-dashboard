@@ -54,6 +54,7 @@ flask-eso-dashboard/
 │   └── background-video.mp4
 ├── .vscode/               # VS Code configuration files
 │   └── launch.json        # Debugging configuration
+├── .gitattributes         # Git LFS file
 ├── .gitignore             # Git ignore file
 ├── requirements.txt       # Python dependencies
 └── README.md              # Project documentation
