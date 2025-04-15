@@ -178,16 +178,18 @@
         <div class="row mt-4 d-flex align-items-stretch">
             <!-- System Status Card -->
             <div class="col-md-4">
-                <div class="card d-flex flex-column h-100">
+                <div class="card flex d-flex flex-column h-100">
                     <div class="card-header text-center bg-primary text-white">
                         ESO Server Status
                     </div>
-                    <div class="card-body flex-grow-1 text-center">
-                        <ul class="list-group" id="serverStatusList">
-                            <li class="list-group-item text-white bg-dark">Loading...</li>
-                        </ul>
-                        <br>
-                        <p class="card-text" id="status">Loading...</p>
+                    <div class="card-body flex-grow-1 text-center flex-row d-flex align-items-center justify-content-center m-2">
+                        <div style="width: 100%;">
+                            <ul class="list-group" id="serverStatusList">
+                                <li class="list-group-item text-white bg-dark">Loading...</li>
+                            </ul>
+                            <br>
+                            <p class="card-text" id="status">Loading...</p>
+                        </div>
                     </div>
                 </div>
             </div>
