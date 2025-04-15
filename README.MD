@@ -59,7 +59,9 @@ flask-eso-dashboard/
 ├── .gitattributes         # Git LFS file
 ├── .gitignore             # Git ignore file
 ├── requirements.txt       # Python dependencies
-└── README.md              # Project documentation
+├── LICENSE                # MIT license
+├── README.md              # Project documentation
+└── readme.png             # Project overview
 ```
 
 This structure ensures clarity and ease of navigation for developers.
