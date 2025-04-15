@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Dashboard</title>
+    <title>ESO Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -12,29 +12,29 @@
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
 
         body {
-            background-color: #000;
-            color: #c7b377;
-            font-family: 'Cinzel', serif;
-            /* Changed to Cinzel as it's closer to ESO's style */
-            background-image: url('https://images.ctfassets.net/rporu91m20dc/4gNjttrkh46UWUQCkkOAsm/eeff79c08bca3d6633dd73f37b03f413/ESO_Necrom_Key_Art_Carousel_Desktop.jpg');
-            background-size: cover;
-            background-attachment: fixed;
-            background-position: center;
-        }
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        background-color: #000;
+        color: #c7b377;
+        font-family: 'Cinzel', serif;
+        background-image: url('https://images.ctfassets.net/rporu91m20dc/4gNjttrkh46UWUQCkkOAsm/eeff79c08bca3d6633dd73f37b03f413/ESO_Necrom_Key_Art_Carousel_Desktop.jpg');
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+    }
 
-        .container {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 1200px;
-            margin: 0;
-            padding: 2rem;
-            background-color: rgba(0, 0, 0, 0.9);
-            border: 1px solid #8e7c44;
-            box-shadow: 0 0 20px rgba(199, 179, 119, 0.1);
-        }
+    .container {
+        margin: 2rem; /* Remove auto margin */
+        width: 90%;
+        max-width: 1200px;
+        padding: 2rem;
+        background-color: rgba(0, 0, 0, 0.9);
+        border: 1px solid #8e7c44;
+        box-shadow: 0 0 20px rgba(199, 179, 119, 0.1);
+    }
 
         /* Mobile responsiveness */
         @media (max-width: 768px) {
@@ -110,16 +110,27 @@
         }
 
         h1 {
-            color: #c7b377;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-size: 2.8rem;
-            text-align: center;
-            margin-bottom: 2rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5),
-                0 0 20px rgba(199, 179, 119, 0.3);
-            font-family: 'Cinzel', serif;
-            font-weight: 700;
+        color: #c7b377;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-size: 2.8rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5),
+            0 0 20px rgba(199, 179, 119, 0.3);
+        font-family: 'Cinzel', serif;
+        font-weight: 700;
+        position: relative; /* Add this for positioning the underline */
+        }
+
+        h1::after {
+            content: '';
+            display: block;
+            width: 100%; 
+            height: 3px;
+            background-color: #c7b377; /* Match the text color */
+            margin: 0 auto;
+            margin-top: 10px; /* Adjust spacing below the text */
         }
 
         .card-title {
@@ -140,6 +151,21 @@
             transition: all 0.3s ease;
             box-shadow: 0 0 15px rgba(199, 179, 119, 0.3);
         }
+
+        /* Custom scrollbar styling */
+        .card-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .card-body::-webkit-scrollbar-track {
+            background: rgba(20, 20, 20, 0.95);
+        }
+
+        .card-body::-webkit-scrollbar-thumb {
+            background-color: #8e7c44;
+            border-radius: 4px;
+            border: 1px solid rgba(20, 20, 20, 0.95);
+        }
     </style>
 </head>
 
@@ -148,15 +174,15 @@
         <source src={{ url_for('static', filename="background-video.mp4" ) }} type="video/mp4">
     </video>
     <div class="container mt-6">
-        <h1 class="text-center">ESO Dashboard</h1>
+        <h1 class="text-center p-2">Elder Scrolls Online</h1>
         <div class="row mt-4 d-flex align-items-stretch">
             <!-- System Status Card -->
             <div class="col-md-4">
-                <div class="card text-center d-flex flex-column h-100">
-                    <div class="card-header bg-primary text-white">
+                <div class="card d-flex flex-column h-100">
+                    <div class="card-header text-center bg-primary text-white">
                         ESO Server Status
                     </div>
-                    <div class="card-body flex-grow-1">
+                    <div class="card-body flex-grow-1 text-center">
                         <ul class="list-group" id="serverStatusList">
                             <li class="list-group-item text-white bg-dark">Loading...</li>
                         </ul>
@@ -168,16 +194,17 @@
             <!-- RSS Feed Card -->
             <div class="col-md-8">
                 <div class="card d-flex flex-column h-100">
-                    <div class="card-header bg-success text-white">
+                    <div class="card-header text-center bg-success text-white">
                         Latest ESO News
                     </div>
-                    <div class="card-body flex-grow-1 m-4" style="max-height: 600px; overflow-y: auto;">
+                    <div class="card-body flex-grow-1 m-2" style="max-height: 620px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #8e7c44 rgba(20, 20, 20, 0.95);">
                         <div id="rssFeed" class="d-flex flex-column gap-3">
                             <div class="text-white bg-dark">Loading...</div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
         <!-- Additional Stats -->
         <div class="row mt-4">
@@ -284,38 +311,39 @@
 
         function fetchRSSFeed() {
             fetch('https://api.rss2json.com/v1/api.json?rss_url=https://eso-hub.com/en/news/feed.rss')
-                .then(response => response.json())
-                .then(data => {
-                    const rssFeed = document.getElementById('rssFeed');
-                    rssFeed.innerHTML = ''; // Clear the list
-                    data.items.slice(0, 3).forEach(item => {
-                        const feedItem = document.createElement('a');
-                        feedItem.href = item.link;
-                        feedItem.target = '_blank';
-                        feedItem.className = 'relative block bg-gray-900 border border-gray-900 shadow-lg rounded overflow-hidden';
-                        feedItem.style.maxWidth = '100%';
-                        feedItem.innerHTML = `
-                                    <img src="${item.thumbnail}" alt="${item.title}" class="w-full" width="100%">
-                                    <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-black/60 to-transparent">
-                                        <h3 class="text-white text-2xl font-semibold shadow-black line-clamp-2" style="text-shadow: black 2px 2px 1px;">
-                                            ${item.title}
-                                        </h3>
-                                        <p class="text-white mt-2 line-clamp-2 text-sm">
-                                            ${item.description}
-                                        </p>
-                                        <p class="text-white text-sm mt-2 line-clamp-1">
-                                            Published on <span class="font-semibold text-white">${new Date(item.pubDate).toLocaleDateString()}</span>
-                                        </p>
-                                    </div>
-                                `;
-                        rssFeed.appendChild(feedItem);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching RSS feed:', error);
-                    const rssFeed = document.getElementById('rssFeed');
-                    rssFeed.innerHTML = '<div class="text-white bg-danger p-3 rounded">Error loading RSS feed</div>';
+            .then(response => response.json())
+            .then(data => {
+                const rssFeed = document.getElementById('rssFeed');
+                rssFeed.innerHTML = ''; // Clear the list
+                data.items.slice(0, 3).forEach(item => {
+                const feedItem = document.createElement('a');
+                feedItem.href = item.link;
+                feedItem.target = '_blank';
+                feedItem.className = 'relative block bg-gray-900 border border-gray-900 shadow-lg rounded overflow-hidden';
+                feedItem.style.maxWidth = '100%';
+                feedItem.style.textDecoration = 'none'; // Remove underline
+                feedItem.innerHTML = `
+                        <img src="${item.thumbnail}" alt="${item.title}" width="100%">
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-black/60 to-transparent">
+                        <h3 class="text-white text-2xl font-semibold shadow-black line-clamp-2" style="text-shadow: black 2px 2px 1px;">
+                            ${item.title}
+                        </h3>
+                        <p class="text-white mt-2 line-clamp-2 text-sm">
+                            ${item.description}
+                        </p>
+                        <p class="text-white text-sm mt-2 line-clamp-1">
+                            Published on <span class="font-semibold text-white">${new Date(item.pubDate).toLocaleDateString()}</span>
+                        </p>
+                        </div>
+                    `;
+                rssFeed.appendChild(feedItem);
                 });
+            })
+            .catch(error => {
+                console.error('Error fetching RSS feed:', error);
+                const rssFeed = document.getElementById('rssFeed');
+                rssFeed.innerHTML = '<div class="text-white bg-danger p-3 rounded">Error loading RSS feed</div>';
+            });
         }
 
         // Fetch RSS feed on page load
