@@ -1,6 +1,6 @@
 # Flask ESO Dashboard
 
-Simple Flask ESO Dashboard with caching support for local deployment
+Simple Flask ESO dashboard with caching support for local deployment
 
 ![Project Overview](readme.png)
 
