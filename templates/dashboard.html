@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Trajan+Pro:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+
+        body {
+            background-color: #000;
+            color: #c7b377;
+            font-family: 'Cinzel', serif;
+            /* Changed to Cinzel as it's closer to ESO's style */
+            background-image: url('https://images.ctfassets.net/rporu91m20dc/4gNjttrkh46UWUQCkkOAsm/eeff79c08bca3d6633dd73f37b03f413/ESO_Necrom_Key_Art_Carousel_Desktop.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+        }
+
+        .container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 1200px;
+            margin: 0;
+            padding: 2rem;
+            background-color: rgba(0, 0, 0, 0.9);
+            border: 1px solid #8e7c44;
+            box-shadow: 0 0 20px rgba(199, 179, 119, 0.1);
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 1rem;
+                position: relative;
+                transform: none;
+                top: 0;
+                left: 0;
+                margin: 1rem auto;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+                margin-bottom: 1rem;
+            }
+
+            .card {
+                margin-bottom: 0.5rem;
+            }
+
+            .card-header {
+                padding: 0.5rem;
+            }
+
+            canvas {
+                height: 200px !important;
+                width: 100% !important;
+            }
+        }
+
+        /* Small mobile devices */
+        @media (max-width: 576px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .container {
+                padding: 0.5rem;
+            }
+
+            .row {
+                margin-left: -5px;
+                margin-right: -5px;
+            }
+
+            .col-md-4,
+            .col-md-8,
+            .col-md-6 {
+                padding: 5px;
+            }
+        }
+
+        .card {
+            background-color: rgba(20, 20, 20, 0.95);
+            border: 1px solid #8e7c44;
+            margin-bottom: 1rem;
+            box-shadow: 0 0 10px rgba(199, 179, 119, 0.2);
+        }
+
+        .card-header {
+            background-color: rgba(142, 124, 68, 0.3) !important;
+            color: #c7b377 !important;
+            border-bottom: 1px solid #8e7c44;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-body {
+            color: #c7b377;
+        }
+
+        h1 {
+            color: #c7b377;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 2.8rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(199, 179, 119, 0.3);
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+        }
+
+        .card-title {
+            color: #c7b377;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        canvas {
+            background-color: rgba(20, 20, 20, 0.95);
+            border-radius: 5px;
+            border: 1px solid #8e7c44;
+        }
+
+        /* Add hover effects */
+        .card:hover {
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(199, 179, 119, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <video style="width: 100vw; height: 100vh; object-fit: cover; position: fixed; z-index: -1; top: 0; left: 0;" autoplay muted loop playsinline id="bg-video">
+        <source src={{ url_for('static', filename="background-video.mp4" ) }} type="video/mp4">
+    </video>
+    <div class="container mt-6">
+        <h1 class="text-center">ESO Dashboard</h1>
+        <div class="row mt-4 d-flex align-items-stretch">
+            <!-- System Status Card -->
+            <div class="col-md-4">
+                <div class="card text-center d-flex flex-column h-100">
+                    <div class="card-header bg-primary text-white">
+                        ESO Server Status
+                    </div>
+                    <div class="card-body flex-grow-1">
+                        <ul class="list-group" id="serverStatusList">
+                            <li class="list-group-item text-white bg-dark">Loading...</li>
+                        </ul>
+                        <br>
+                        <p class="card-text" id="status">Loading...</p>
+                    </div>
+                </div>
+            </div>
+            <!-- RSS Feed Card -->
+            <div class="col-md-8">
+                <div class="card d-flex flex-column h-100">
+                    <div class="card-header bg-success text-white">
+                        Latest ESO News
+                    </div>
+                    <div class="card-body flex-grow-1 m-4" style="max-height: 600px; overflow-y: auto;">
+                        <div id="rssFeed" class="d-flex flex-column gap-3">
+                            <div class="text-white bg-dark">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Additional Stats -->
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-header bg-info text-white">
+                        Active Users
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" id="activeUsers">0</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-header bg-warning text-white">
+                        24 Hour Peak
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" id="24Peak">0</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-header bg-danger text-white">
+                        All-Time Peak
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" id="allPeak">0</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const statuses = ["All servers operational", "Minor issues detected", "Server maintenance ongoing", "Critical failure detected"];
+        function updateStatus() {
+            fetch('api/v1/eso_servers')
+                .then(response => response.json())
+                .then(data => {
+                    const serverStatusList = document.getElementById('serverStatusList');
+                    serverStatusList.innerHTML = ''; // Clear the list
+                    for (const [server, status] of Object.entries(data)) {
+                        let serversOffline = 0;
+                        if (status !== "Online") {
+                            serversOffline++
+                        }
+                        const listItem = document.createElement('li');
+                        listItem.className = 'list-group-item text-white';
+                        listItem.style.backgroundColor = status === 'Online' ? 'green' : 'red';
+                        listItem.textContent = `${server}: ${status}`;
+                        serverStatusList.appendChild(listItem);
+
+                        switch (serversOffline) {
+                            case 0:
+                                document.getElementById('status').innerText = statuses[0];
+                                break;
+                            case 1:
+                                document.getElementById('status').innerText = statuses[1];
+                                break;
+                            default:
+                                document.getElementById('status').innerText = statuses[3];
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching server statuses:', error);
+                    const serverStatusList = document.getElementById('serverStatusList');
+                    document.getElementById('status').innerText = statuses[3];
+                    serverStatusList.innerHTML = '<li class="list-group-item text-white bg-danger">Error loading server statuses</li>';
+                });
+
+        }
+
+        function updateStats() {
+            fetch('api/v1/eso_current_players')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('activeUsers').innerText = data;
+                })
+                .catch(error => {
+                    console.error('Error fetching active users:', error);
+                    document.getElementById('activeUsers').innerText = 'Error';
+                });
+
+            fetch('api/v1/steam_charts_player_count')
+                .then(response => response.json())
+                .then(data => {
+                    if (data["24-peak"] !== undefined) {
+                        document.getElementById('24Peak').innerText = data["24-peak"];
+                    }
+                    if (data["all-time-peak"] !== undefined) {
+                        document.getElementById('allPeak').innerText = data["all-time-peak"];
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching active users:', error);
+                    document.getElementById('24Peak').innerText = 'Error';
+                    document.getElementById('allPeak').innerText = 'Error';
+                });
+        }
+
+        function fetchRSSFeed() {
+            fetch('https://api.rss2json.com/v1/api.json?rss_url=https://eso-hub.com/en/news/feed.rss')
+                .then(response => response.json())
+                .then(data => {
+                    const rssFeed = document.getElementById('rssFeed');
+                    rssFeed.innerHTML = ''; // Clear the list
+                    data.items.slice(0, 3).forEach(item => {
+                        const feedItem = document.createElement('a');
+                        feedItem.href = item.link;
+                        feedItem.target = '_blank';
+                        feedItem.className = 'relative block bg-gray-900 border border-gray-900 shadow-lg rounded overflow-hidden';
+                        feedItem.style.maxWidth = '100%';
+                        feedItem.innerHTML = `
+                                    <img src="${item.thumbnail}" alt="${item.title}" class="w-full" width="100%">
+                                    <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-black/60 to-transparent">
+                                        <h3 class="text-white text-2xl font-semibold shadow-black line-clamp-2" style="text-shadow: black 2px 2px 1px;">
+                                            ${item.title}
+                                        </h3>
+                                        <p class="text-white mt-2 line-clamp-2 text-sm">
+                                            ${item.description}
+                                        </p>
+                                        <p class="text-white text-sm mt-2 line-clamp-1">
+                                            Published on <span class="font-semibold text-white">${new Date(item.pubDate).toLocaleDateString()}</span>
+                                        </p>
+                                    </div>
+                                `;
+                        rssFeed.appendChild(feedItem);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching RSS feed:', error);
+                    const rssFeed = document.getElementById('rssFeed');
+                    rssFeed.innerHTML = '<div class="text-white bg-danger p-3 rounded">Error loading RSS feed</div>';
+                });
+        }
+
+        // Fetch RSS feed on page load
+        fetchRSSFeed();
+
+        // Automatically refresh status, stats, and chart every 60 seconds
+        setInterval(() => {
+            updateStatus();
+            updateStats();
+        }, 60000);
+
+        // Initial updates on page load
+        updateStatus();
+        updateStats();
+    </script>
+</body>
+
+</html>

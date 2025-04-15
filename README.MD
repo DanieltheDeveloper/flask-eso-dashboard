@@ -1,0 +1,71 @@
+# Flask ESO Dashboard
+
+Simple Flask ESO Dashboard for local deployment
+
+## Features
+
+- ESO player count, server status and RSS feed from ESO hub.
+- Versioned API.
+- Easy to extend and customize.
+
+## Requirements
+
+- Python 3.7 or higher
+- Flask
+
+## Installation
+
+1. Clone the repository:
+    ```bash
+    git clone <repository-url>
+    cd flask-eso-dashboard
+    ```
+
+2. Create a virtual environment and activate it:
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On Windows: venv\Scripts\activate
+    ```
+
+3. Install dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+## Usage
+
+1. Run the Flask application:
+    ```bash
+    flask run
+    ```
+
+2. Open your browser and navigate to `http://127.0.0.1:5000`.
+
+## Project Structure
+
+Here is an overview of the project structure:
+
+```
+flask-eso-dashboard/
+├── app.py                 # Main Flask application
+├── templates/             # HTML templates for the app
+│   └── dashboard.html     # Main dashboard page
+├── static/                # Static assets (CSS, JS, images, videos)
+│   └── background-video.mp4
+├── .vscode/               # VS Code configuration files
+│   └── launch.json        # Debugging configuration
+├── .gitignore             # Git ignore file
+├── requirements.txt       # Python dependencies
+└── README.md              # Project documentation
+```
+
+This structure ensures clarity and ease of navigation for developers.
+
+## License
+
+This project is licensed under the MIT License.
+
+## Legal
+
+Elder Scrolls Online, SteamCharts, Steam, and all associated logos and designs are trademarks or registered trademarks of their respective owners.  
+This project is not affiliated with ZeniMax Online Studios, Bethesda Softworks, Steam, or any of their family of sites.

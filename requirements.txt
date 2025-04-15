@@ -1,0 +1,4 @@
+flask
+flask-caching
+bs4
+requests
