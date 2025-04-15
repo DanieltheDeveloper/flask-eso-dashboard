@@ -50,6 +50,7 @@ Here is an overview of the project structure:
 ```
 flask-eso-dashboard/
 ├── app.py                 # Main Flask application
+├── api_routes.py          # API v1 routes
 ├── templates/             # HTML templates for the app
 │   └── dashboard.html     # Main dashboard page
 ├── static/                # Static assets (CSS, JS, images, videos)
