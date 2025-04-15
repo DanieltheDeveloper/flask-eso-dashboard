@@ -2,6 +2,8 @@
 
 Simple Flask ESO Dashboard for local deployment
 
+![Project Overview](readme.png)
+
 ## Features
 
 - ESO player count, server status and RSS feed from ESO hub.
