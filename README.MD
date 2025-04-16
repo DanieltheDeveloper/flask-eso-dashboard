@@ -52,6 +52,8 @@ flask-eso-dashboard/
 ├── app.py                 # Main Flask application
 ├── api_routes.py          # API v1 routes
 ├── extensions.py          # Add extensions like cache to app
+├── .github/workflows/     # GitHub workflows
+│   └── pylint.yml         # Pylint
 ├── templates/             # HTML templates for the app
 │   └── dashboard.html     # Main dashboard page
 ├── static/                # Static assets (CSS, JS, images, videos)
