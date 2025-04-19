@@ -1,6 +1,6 @@
-# Flask ESO Dashboard
+# FastAPI ESO Dashboard
 
-Simple Flask ESO dashboard with caching support for local deployment
+Simple FastAPI ESO dashboard with caching support for local deployment
 
 You can find a demo here: https://flask-eso-dashboard.onrender.com/
 
@@ -15,7 +15,7 @@ You can find a demo here: https://flask-eso-dashboard.onrender.com/
 ## Requirements
 
 - Python 3.7 or higher
-- Flask
+- FastAPI
 
 ## Installation
 
@@ -38,12 +38,12 @@ You can find a demo here: https://flask-eso-dashboard.onrender.com/
 
 ## Usage
 
-1. Run the Flask application:
+1. Run the FastAPI application:
     ```bash
-    flask run
+    fastapi dev app.py
     ```
 
-2. Open your browser and navigate to `http://127.0.0.1:5000`.
+2. Open your browser and navigate to `http://127.0.0.1:8000`.
 
 ## Project Structure
 

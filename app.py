@@ -1,17 +1,34 @@
 """Flask application entry point."""
 
-from flask import Flask, render_template
-from extensions import cache  # Import the cache object
-from api_routes import api_v1_blueprint  # Import the blueprint
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from extensions import cache, cached  # Import the cache and cached decorator
 
-app = Flask(__name__, static_folder='static')
+from api_routes import router  # Import the router
 
-cache.init_app(app, config={'CACHE_TYPE': 'SimpleCache'})
+# Create a Jinja2 template instance
+templates = Jinja2Templates(directory="templates")
 
-# Register the blueprint for API routes
-app.register_blueprint(api_v1_blueprint, url_prefix="/api/v1")
+# Create application instance
+app = FastAPI(title="ESO Dashboard",
+              summary="Simple ESO dashboard with caching support for local deployment",
+              version="1.0"
+              )
 
-@app.route("/")
-def home():
+# Mount the static folder to the app
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Include the router with prefix
+app.include_router(router, prefix="/api/v1")
+
+# Define the cache for the root route
+@cached(cache)
+# Root route for the dashboard
+@app.get("/", response_class=HTMLResponse)
+async def root(request: Request):
     """Home page route."""
-    return render_template("dashboard.html")
+    return templates.TemplateResponse(
+          name="dashboard.html", context={}, request=request
+      )

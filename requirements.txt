@@ -1,5 +1,5 @@
-flask
-flask-caching
+fastapi[standard]
+cachetools
 bs4
 requests
 gunicorn

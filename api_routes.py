@@ -1,17 +1,19 @@
 """Setup API routes and cache for ESO server status and player counts."""
 
-from flask import Blueprint, jsonify
+from fastapi import APIRouter, HTTPException
+from typing import Dict, Union
 import requests
 from bs4 import BeautifulSoup
-from extensions import cache
+from extensions import cache, cacheLong, cached  # Import lru_cache from extensions
 
-api_v1_blueprint = Blueprint("api_v1", __name__)
+# Create API router instead of Blueprint
+router = APIRouter()
 
 ESO_SERVER_REGIONS = ["PC-EU", "PC-NA", "PC-PTS", "XBOX-EU", "XBOX-NA", "PS4-NA", "PS4-EU"]
 STEAM_CHART_COUNTS = ["current", "24-peak", "all-time-peak"]
 
-@cache.cached(timeout=120, key_prefix='eso_servers')
-def get_servers():
+# ESO server status route
+def get_servers() -> Dict[str, str]:
     """Function fetching ESO server status."""
     url = "https://esoserverstatus.net/"
     response = requests.get(url, timeout=10)
@@ -27,30 +29,33 @@ def get_servers():
 
     return servers
 
-@api_v1_blueprint.route("/eso_servers")
-def eso_servers():
+# Cache for ESO server status
+# ESO server status route
+@cached(cacheLong)
+@router.get("/eso_servers")
+async def eso_servers() -> Dict[str, str]:
     """ESO server status route."""
-    return jsonify(get_servers())
+    return get_servers()
 
-@cache.cached(timeout=600, key_prefix='eso_current_players')
-@api_v1_blueprint.route("/eso_current_players")
-def eso_current_players():
+# Cache for ESO current players
+# ESO current players route
+@cached(cache)
+@router.get("/eso_current_players")
+async def eso_current_players() -> Dict[str, int]:
     """Function fetching player count from Steam API."""
     url = "https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=306130"
     try:
         response = requests.get(url, timeout=10)
         data = response.json()
         if data.get("response") and "player_count" in data["response"]:
-            player_count = data["response"]["player_count"]
+            return {"player_count": data["response"]["player_count"]}
         else:
-            player_count = "Error: Unexpected API response"
+            return {"error": "Unexpected API response"}
     except requests.exceptions.RequestException as e:
-        player_count = f"Error: {str(e)}"
+        raise HTTPException(status_code=500, detail=str(e))
 
-    return jsonify(player_count)
-
-@cache.cached(timeout=600, key_prefix='steam_charts_current_players')
-def get_steam_charts_player_count():
+# Steam Charts player count route
+def get_steam_charts_player_count() -> Dict[str, str]:
     """Function fetching player count from Steam Charts."""
     url = "https://steamcharts.com/app/306130"
     response = requests.get(url, timeout=10)
@@ -66,7 +71,10 @@ def get_steam_charts_player_count():
 
     return steam_charts_players
 
-@api_v1_blueprint.route("/steam_charts_player_count")
-def steam_charts_player_count():
+# Cache for Steam Charts player count
+# Steam Charts player count route
+@cached(cache)
+@router.get("/steam_charts_player_count")
+async def steam_charts_player_count() -> Dict[str, str]:
     """Steam charts player count route."""
-    return jsonify(get_steam_charts_player_count())
+    return get_steam_charts_player_count()
