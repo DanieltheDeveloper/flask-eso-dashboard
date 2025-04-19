@@ -1,4 +1,4 @@
-"""Flask application entry point."""
+"""FastAPI application entry point."""
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
