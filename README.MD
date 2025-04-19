@@ -2,7 +2,7 @@
 
 Simple Flask ESO dashboard with caching support for local deployment
 
-You can find a demo here: https://flask-eso-dashboard.onrender.com/
+You can find a demo here: https://flask-eso-dashboard.onrender.com/ [Currently running feature/fastapi branch]
 
 ![Project Overview](readme.png)
 
