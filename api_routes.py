@@ -1,10 +1,11 @@
 """Setup API routes and cache for ESO server status and player counts."""
 
-from fastapi import APIRouter, HTTPException
-from typing import Dict, Union
+from typing import Dict
 import requests
+from fastapi import APIRouter, HTTPException
 from bs4 import BeautifulSoup
-from extensions import cache, cacheLong, cached  # Import lru_cache from extensions
+from cachetools import cached  # Import cached from cachetools
+from extensions import cache, cacheLong  # Import cache from extensions
 
 # Create API router instead of Blueprint
 router = APIRouter()
@@ -49,10 +50,9 @@ async def eso_current_players() -> Dict[str, int]:
         data = response.json()
         if data.get("response") and "player_count" in data["response"]:
             return {"player_count": data["response"]["player_count"]}
-        else:
-            return {"error": "Unexpected API response"}
+        return {"error": "Unexpected API response"}
     except requests.exceptions.RequestException as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 # Steam Charts player count route
 def get_steam_charts_player_count() -> Dict[str, str]:

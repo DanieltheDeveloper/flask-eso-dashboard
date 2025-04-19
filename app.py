@@ -4,7 +4,8 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from extensions import cache, cached  # Import the cache and cached decorator
+from cachetools import cached  # Import cached from cachetools
+from extensions import cache  # Import the cache
 
 from api_routes import router  # Import the router
 
